@@ -2,46 +2,52 @@ import streamlit as st
 import pickle
 import numpy as np
 
-# Page config
 st.set_page_config(page_title="Laptop Price Predictor", layout="centered")
 
 # Load model
 df = pickle.load(open('df.pkl', 'rb'))
 pipe = pickle.load(open('pipe.pkl', 'rb'))
 
-# Simple CSS (clean, not overkill)
+# Minimal but good CSS
 st.markdown("""
 <style>
 body {
-    background-color: #f5f7fa;
-}
-
-.main {
-    padding: 20px;
+    background-color: #0f172a;
+    color: #e2e8f0;
 }
 
 h1 {
-    color: #2c3e50;
     text-align: center;
+    color: #e2e8f0;
 }
 
+.block-container {
+    padding-top: 2rem;
+}
+
+/* Inputs */
+.stSelectbox, .stNumberInput {
+    margin-bottom: 10px;
+}
+
+/* Button */
 .stButton>button {
-    background-color: #4CAF50;
+    background-color: #3b82f6;
     color: white;
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 10px;
-    width: 100%;
+    font-weight: 500;
 }
 
 .stButton>button:hover {
-    background-color: #45a049;
+    background-color: #2563eb;
 }
 
+/* Cards */
 .card {
-    background-color: white;
+    background-color: #1e293b;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
     margin-top: 20px;
 }
 </style>
@@ -50,7 +56,7 @@ h1 {
 # Title
 st.title("💻 Laptop Price Predictor")
 
-st.write("Enter laptop specifications below:")
+st.write("Fill the details and get estimated price")
 
 # Inputs
 company = st.selectbox("Brand", sorted(df['Company'].unique()))
@@ -70,7 +76,7 @@ ppi = st.number_input("PPI", 50, 350, 150)
 
 weight = st.number_input("Weight (kg)", 0.5, 5.0, 2.0)
 
-# Prediction
+# Predict
 if st.button("Predict Price"):
 
     ts_val = 1 if touchscreen == "Yes" else 0
@@ -82,24 +88,22 @@ if st.button("Predict Price"):
     log_price = pipe.predict(query)[0]
     price = int(np.exp(log_price))
 
-    # Result card
     st.markdown(f"""
     <div class="card">
         <h3>Estimated Price</h3>
-        <h2 style="color:#4CAF50;">₹{price}</h2>
+        <h2 style="color:#3b82f6;">₹{price}</h2>
     </div>
     """, unsafe_allow_html=True)
 
-    # Config summary
     st.markdown(f"""
     <div class="card">
         <h4>Configuration</h4>
-        <p><b>Brand:</b> {company}</p>
-        <p><b>CPU:</b> {cpu_brand}</p>
-        <p><b>RAM:</b> {ram} GB</p>
-        <p><b>Storage:</b> {ssd}GB SSD + {hdd}GB HDD</p>
-        <p><b>GPU:</b> {gpu_brand}</p>
-        <p><b>OS:</b> {os}</p>
-        <p><b>Weight:</b> {weight} kg</p>
+        <p>Brand: {company}</p>
+        <p>CPU: {cpu_brand}</p>
+        <p>RAM: {ram} GB</p>
+        <p>Storage: {ssd}GB SSD + {hdd}GB HDD</p>
+        <p>GPU: {gpu_brand}</p>
+        <p>OS: {os}</p>
+        <p>Weight: {weight} kg</p>
     </div>
     """, unsafe_allow_html=True)
