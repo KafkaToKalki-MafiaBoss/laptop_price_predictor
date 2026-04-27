@@ -31,13 +31,17 @@ col1, col2, col3 = st.columns(3)
 with col1:
     st.subheader("Brand & Category")
     company   = st.selectbox("Brand",            sorted(df['Company'].unique()))
-    type_name = st.selectbox("Type",             df['TypeName'].unique())
-    os        = st.selectbox("Operating System", df['os'].unique())
+    available_types_type=df[df['Company']==company]['TypeName'].unique()
+    type_name = st.selectbox("Type",             available_types_type)
+    available_types_os=df[df['Company']==company]['os'].unique()
+    os        = st.selectbox("Operating System", available_types_os)
  
 with col2:
     st.subheader("Processor & Memory")
-    cpu_brand = st.selectbox("CPU",      df['Cpu brand'].unique())
-    gpu_brand = st.selectbox("GPU",      df['Gpu brand'].unique())
+    available_types_cpu=df[df['Company']==company]['Cpu brand'].unique()
+    cpu_brand = st.selectbox("CPU",      available_types_cpu)
+    available_types_gpu=df[df['Company']==company]['Gpu brand'].unique()
+    gpu_brand = st.selectbox("GPU",      available_types_gpu)
     ram       = st.selectbox("RAM (GB)", [2, 4, 6, 8, 12, 16, 24, 32, 64], index=3)
  
 with col3:
