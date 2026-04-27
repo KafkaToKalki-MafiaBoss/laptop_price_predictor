@@ -42,12 +42,20 @@ with col2:
     cpu_brand = st.selectbox("CPU",      available_types_cpu)
     available_types_gpu=df[df['Company']==company]['Gpu brand'].unique()
     gpu_brand = st.selectbox("GPU",      available_types_gpu)
-    ram       = st.selectbox("RAM (GB)", [2, 4, 6, 8, 12, 16, 24, 32, 64], index=3)
+    filtered = df[(df['Company'] == company) & (df['TypeName'] == type_name)]
+    available_ram = sorted(filtered['Ram'].unique())
+    ram = st.selectbox("RAM (GB)", available_ram)
+
  
 with col3:
     st.subheader("Storage & Display")
-    ssd         = st.selectbox("SSD (GB)",             [0, 8, 128, 256, 512, 1024])
-    hdd         = st.selectbox("HDD (GB)",             [0, 128, 256, 512, 1024, 2048])
+    filtered2 = filtered[filtered['Ram'] == ram]
+
+    available_ssd = sorted(filtered2['SSD'].unique())
+    ssd = st.selectbox("SSD (GB)", available_ssd)
+
+    available_hdd = sorted(filtered2['HDD'].unique())
+    hdd = st.selectbox("HDD (GB)", available_hdd)
     touchscreen = st.selectbox("Touchscreen",          ["No", "Yes"])
     ips         = st.selectbox("IPS Display",          ["No", "Yes"])
     ppi         = st.number_input("PPI",               min_value=50,  max_value=350, value=150)
